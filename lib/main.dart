@@ -2,7 +2,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:midascraft/hlasovanie.dart';
+import 'package:midascraft/htmlview.dart';
 import 'package:midascraft/loading.dart';
+import 'package:midascraft/settings.dart';
 import 'package:midascraft/util/WebRouteParams.dart';
 import 'package:midascraft/webview.dart';
 
@@ -14,6 +16,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +34,9 @@ class MyApp extends StatelessWidget {
         Load.route : (BuildContext context) => const Load(),
         MainScreen.route : (BuildContext context) => MainScreen(),
         Hlasovanie.route : (BuildContext context) => Hlasovanie(),
-        MidasWebView.route : (BuildContext context) => MidasWebView()
+        MidasWebView.route : (BuildContext context) => MidasWebView(),
+        Settings.route : (BuildContext context) => Settings(),
+        HtmlView.route : (BuildContext context) => HtmlView()
       }
     );
   }

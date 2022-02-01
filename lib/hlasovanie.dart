@@ -30,7 +30,7 @@ class _HlasovanieState extends State<Hlasovanie> {
 
 
   String name = "";
-  final nameController = TextEditingController();
+  final nameController = TextEditingController(text: LoadState.prefs.getString('voteName') ?? "");
 
   bool webOpened = false;
 
@@ -56,11 +56,6 @@ class _HlasovanieState extends State<Hlasovanie> {
         appBar: AppBar(
           title: const Text('Hlasovanie za MidasCraft'),
           backgroundColor: Color(0xff330000),
-          actions: [
-            IconButton(
-                onPressed: () => _key.currentState!.openEndDrawer(),
-                icon: Icon(Icons.menu))
-          ],
           leading: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Image.asset(
@@ -74,17 +69,17 @@ class _HlasovanieState extends State<Hlasovanie> {
                  border: Border(bottom: BorderSide(color: Colors.red))),
               margin: EdgeInsets.all(32),
               child: TextField(
-
                 controller: nameController,
                 decoration:  const InputDecoration(
                   floatingLabelStyle: TextStyle(color: Colors.red),
                   labelStyle: TextStyle(color: Colors.white),
                   border:  UnderlineInputBorder(),
-                  labelText: "Prezývka"
+                  labelText: "Prezývka",
                 ),
 
           )),
           Expanded ( child: ListView.builder(
+
               itemCount: 3,
               itemBuilder: (BuildContext context, int index) {
                 return InkWell(

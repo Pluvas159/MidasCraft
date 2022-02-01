@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' as parser;
+import 'package:midascraft/home.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class Load extends StatefulWidget {
   const Load({Key? key}) : super(key: key);
@@ -20,9 +25,11 @@ class LoadState extends State<Load>{
   static late Image headerImage;
   static late List<dom.Element> articles;
   static List<Image> articleImages = [];
+  static var prefs;
 
   @override
   void initState() {
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
     _getDOM();
     super.initState();
   }
@@ -62,8 +69,10 @@ class LoadState extends State<Load>{
       articleImages.add(Image.network(
           article.children[0].children[0].attributes["src"].toString()));
     }
+    prefs = await SharedPreferences.getInstance();
+
     if (document!=null){
-      Navigator.of(context).pushReplacementNamed('/novinky');
+      Navigator.of(context).pushReplacementNamed(MainScreen.route);
    }
     } else {
       throw NullThrownError();

@@ -18,6 +18,7 @@ class MidasWebViewState extends State<MidasWebView> {
   Completer<WebViewController> _controller = Completer<WebViewController>();
   bool isLoading = true;
 
+
   @override
   Widget build(BuildContext context) {
     final Params = ModalRoute.of(context)!.settings.arguments as WebRouteParams;
@@ -25,30 +26,39 @@ class MidasWebViewState extends State<MidasWebView> {
         appBar: AppBar(
           title: Text(Params.title),
           backgroundColor: Color(0xff330000),
-          leading: IconButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              icon: Icon(Icons.arrow_back),
-              color: Colors.white),
-          actions: [isLoading? Center(child: Container(margin: EdgeInsets.only(right: 25), child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2,))) : Stack() ],
+          actions: [
+            isLoading
+                ? Center(
+                    child: Container(
+                        margin: EdgeInsets.only(right: 25),
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        )))
+                : Text("")
+          ],
         ),
-        body: WebView(
-          initialUrl: Params.url,
-          javascriptMode: JavascriptMode.unrestricted,
-          onWebViewCreated: (WebViewController controller) {
-            _controller.complete(controller);
-          },
-          onPageFinished: (finish) {
-            setState(() {
-              isLoading = false;
-            });
-          },
-          onPageStarted: (start) {
-            setState(() {
-              isLoading = true;
-            });
-          },
-        ));
+        body: Builder(builder: (BuildContext context) {
+          return Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              child: WebView(
+                initialUrl: Params.url,
+                javascriptMode: JavascriptMode.unrestricted,
+                onWebViewCreated: (WebViewController controller) {
+                  _controller.complete(controller);
+                },
+                onPageFinished: (finish) {
+                  setState(() {
+                    isLoading = false;
+                  });
+                },
+                onPageStarted: (start) {
+                  setState(() {
+                    isLoading = true;
+                  });
+                },
+              ));
+        }));
   }
 }

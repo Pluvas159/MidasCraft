@@ -1,8 +1,11 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:midascraft/hlasovanie.dart';
+import 'package:midascraft/home.dart';
+import 'package:midascraft/settings.dart';
 
-enum DrawerSelection { novinky, hlasovanie, settings}
+enum DrawerSelection { novinky, hlasovanie, nastavenia}
 
 DrawerSelection _drawerSelection = DrawerSelection.novinky;
 
@@ -52,7 +55,7 @@ class _MidasDrawerState extends State<MidasDrawer> {
                 _drawerSelection = DrawerSelection.novinky;
               });
               // Then close the drawer
-              Navigator.of(context).pushReplacementNamed('/novinky');
+              Navigator.of(context).pushReplacementNamed(MainScreen.route);
             },
           ),
           ListTile(
@@ -65,7 +68,20 @@ class _MidasDrawerState extends State<MidasDrawer> {
                 _drawerSelection = DrawerSelection.hlasovanie;
               });
               // Then close the drawer
-              Navigator.of(context).pushReplacementNamed('/hlasovanie');
+              Navigator.of(context).pushReplacementNamed(Hlasovanie.route);
+            },
+          ),
+          ListTile(
+            selected: DrawerSelection.nastavenia == _drawerSelection,
+            selectedTileColor: Color(0xff330000),
+            title: const Text('Nastavenia'),
+            onTap: () {
+              // Update the state of the app
+              setState(() {
+                _drawerSelection = DrawerSelection.nastavenia;
+              });
+              // Then close the drawer
+              Navigator.of(context).pushReplacementNamed(Settings.route);
             },
           ),
         ],

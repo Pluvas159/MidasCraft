@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:midascraft/drawer.dart';
 import 'package:midascraft/util/WebRouteParams.dart';
+import 'package:midascraft/webview.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'htmlview.dart';
 import 'loading.dart';
 
 /// This is the stateless widget that the main application instantiates.
@@ -22,7 +24,6 @@ class MainScreen extends StatelessWidget {
                 expandedHeight: 200.0,
                 pinned: true,
                 backgroundColor: Color(0xff330000),
-                actions: [IconButton(onPressed: () => _key.currentState!.openEndDrawer(), icon: Icon(Icons.menu))],
                 leading: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Image.asset(
@@ -104,7 +105,8 @@ Widget _homeRow(dom.Element article, BuildContext context, int index) {
           color: Colors.white10,
           border: Border(bottom: BorderSide(color: Colors.red))),
     ),
-    onTap: () => Navigator.of(context).pushNamed('/view', arguments: WebRouteParams("Novinky", article.children[0].attributes["href"].toString())),
+    onTap: () => Navigator.of(context).pushNamed(HtmlView.route,
+        arguments: WebRouteParams( article.children[0].attributes['title'].toString(),article.children[0].attributes["href"].toString(), type: "article")),
   );
 }
 
