@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:midascraft/hlasovanie.dart';
 import 'package:midascraft/home.dart';
 import 'package:midascraft/settings.dart';
+import 'package:midascraft/util/WebRouteParams.dart';
 
-enum DrawerSelection { novinky, hlasovanie, nastavenia}
+import 'forum/forum.dart';
+
+enum DrawerSelection { novinky, hlasovanie, nastavenia, forum}
 
 DrawerSelection _drawerSelection = DrawerSelection.novinky;
 
@@ -69,6 +72,19 @@ class _MidasDrawerState extends State<MidasDrawer> {
               });
               // Then close the drawer
               Navigator.of(context).pushReplacementNamed(Hlasovanie.route);
+            },
+          ),
+          ListTile(
+            selected: DrawerSelection.forum == _drawerSelection,
+            selectedTileColor: Color(0xff330000),
+            title: const Text('Fórum'),
+            onTap: () {
+              // Update the state of the app
+              setState(() {
+                _drawerSelection = DrawerSelection.forum;
+              });
+              // Then close the drawer
+              Navigator.of(context).pushReplacementNamed(Forum.route, arguments: WebRouteParams( "Fórum","https://midascraft.sk/forum/"));
             },
           ),
           ListTile(

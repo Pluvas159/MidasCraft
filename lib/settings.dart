@@ -16,7 +16,7 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   final nameController =
       TextEditingController(text: LoadState.prefs.getString('voteName') ?? "");
-
+  bool nameSave = false;
 
   @override
   void dispose() {
@@ -24,6 +24,7 @@ class _SettingsState extends State<Settings> {
     nameController.dispose();
     super.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -39,29 +40,53 @@ class _SettingsState extends State<Settings> {
         ),
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-              padding: EdgeInsets.all(50),
-              child: Row(
-                children: [
-                  Expanded(
-                      child: TextField(
-                          controller: nameController,
-                          decoration: const InputDecoration(
-                            floatingLabelStyle: TextStyle(color: Colors.red),
-                            labelStyle: TextStyle(color: Colors.white),
-                            border: UnderlineInputBorder(),
-                            labelText: "Prezývka",
-                          ))),
-                  IconButton(
-                      onPressed: () {
-                        LoadState.prefs
-                            .setString("voteName", nameController.text);
-                      },
-                      icon: Icon(Icons.save, color: Colors.white))
-                ],
+              padding: EdgeInsets.fromLTRB(15, 20, 50, 0),
+              child: Text(
+                "Automatická prezývka pre hlasovanie: ",
+                textAlign: TextAlign.left,
+                textScaleFactor: 1.1,
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
               )),
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: 30),
+              child: Column(children: [
+                Row(
+                  children: [
+                    Expanded(
+                        child: TextField(
+                            onChanged: (text) {
+                              setState(() {
+                                nameSave = false;
+                              });
+                            },
+                            controller: nameController,
+                            decoration: const InputDecoration(
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white)),
+                              floatingLabelStyle: TextStyle(color: Colors.red),
+                              labelStyle: TextStyle(color: Colors.white),
 
+                            ))),
+                    IconButton(
+                        onPressed: () {
+                          if (nameController.text !=
+                              LoadState.prefs.getString("voteName")) {
+                            LoadState.prefs
+                                .setString("voteName", nameController.text);
+                            setState(() {
+                              nameSave = true;
+                            });
+                          }
+                        },
+                        icon: Icon(Icons.save,
+                            color: nameSave ? Colors.red : Colors.white))
+                  ],
+                )
+              ])),
         ],
       ),
       endDrawer: MidasDrawer(),

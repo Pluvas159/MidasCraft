@@ -8,6 +8,7 @@ import 'package:midascraft/settings.dart';
 import 'package:midascraft/util/WebRouteParams.dart';
 import 'package:midascraft/webview.dart';
 
+import 'forum/forum.dart';
 import 'home.dart';
 
 void main() {
@@ -36,7 +37,8 @@ class MyApp extends StatelessWidget {
         Hlasovanie.route : (BuildContext context) => Hlasovanie(),
         MidasWebView.route : (BuildContext context) => MidasWebView(),
         Settings.route : (BuildContext context) => Settings(),
-        HtmlView.route : (BuildContext context) => HtmlView()
+        HtmlView.route : (BuildContext context) => HtmlView(),
+        Forum.route: (BuildContext context ) => Forum()
       }
     );
   }
