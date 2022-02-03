@@ -5,6 +5,7 @@ import 'package:html/dom.dart' as dom;
 import 'package:http/http.dart' as http;
 import 'package:midascraft/util/WebRouteParams.dart';
 import 'package:html/parser.dart' as parser;
+import 'package:midascraft/util/midas_colors.dart';
 import 'package:midascraft/webview.dart';
 
 
@@ -39,7 +40,7 @@ class HtmlViewState extends State<HtmlView> {
           return Scaffold(
               appBar: AppBar(
                 title: Text(Params.title),
-                backgroundColor: Color(0xff330000),
+                backgroundColor: MidasColors.veryDarkRed,
               ),
               body: SingleChildScrollView(
                   child: fhtml.Html(
@@ -157,8 +158,9 @@ Widget widgetArticle(BuildContext context, WebRouteParams Params, dom.Document p
                 .children[0]
                 .attributes["src"]
                 .toString()),
+            Divider(),
             HtmlWidget(
-              newPage.getElementsByClassName("entry-content")[0].outerHtml,
+              newPage.getElementsByTagName("article")[0].outerHtml,
               onTapUrl: (url) {
                 Navigator.of(context).pushNamed(MidasWebView.route,
                     arguments: WebRouteParams("MidasCraft", url));

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:midascraft/drawer.dart';
+import 'package:midascraft/util/midas_colors.dart';
 
 import 'loading.dart';
 
@@ -49,7 +50,7 @@ class _SettingsState extends State<Settings> {
                 textAlign: TextAlign.left,
                 textScaleFactor: 1.1,
                 style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+                    TextStyle(fontWeight: FontWeight.bold, color: MidasColors.darkRed),
               )),
           Padding(
               padding: EdgeInsets.symmetric(horizontal: 30),

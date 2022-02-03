@@ -37,6 +37,8 @@ dependencies:
   webview_flutter: ^2.0.4
   shared_preferences: ^2.0.12
   flutter_widget_from_html: ^0.8.5
+  flutter_local_notifications: ^9.0.0
+  flutter_native_timezone: ^2.0.0
 
 flutter_icons:
   image_path: "assets/midascraft.png"

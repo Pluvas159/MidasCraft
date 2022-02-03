@@ -1,4 +1,5 @@
 
+import 'package:midascraft/notifications/notifications_api.dart';
 import 'package:midascraft/util/WebRouteParams.dart';
 
 import 'package:flutter/material.dart';
@@ -78,7 +79,9 @@ class _HlasovanieState extends State<Hlasovanie> {
                 ),
 
           )),
-          Expanded ( child: ListView.builder(
+          IconButton(icon: Icon(Icons.assignment_turned_in), onPressed: () => LoadState.notifications.send_notification("MidasCraft", "Hlasovanie") ,),
+          Expanded (
+              child: ListView.builder(
 
               itemCount: 3,
               itemBuilder: (BuildContext context, int index) {

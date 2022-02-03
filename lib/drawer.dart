@@ -5,6 +5,7 @@ import 'package:midascraft/hlasovanie.dart';
 import 'package:midascraft/home.dart';
 import 'package:midascraft/settings.dart';
 import 'package:midascraft/util/WebRouteParams.dart';
+import 'package:midascraft/util/midas_colors.dart';
 
 import 'forum/forum.dart';
 
@@ -37,7 +38,7 @@ class _MidasDrawerState extends State<MidasDrawer> {
                 image: ExactAssetImage('assets/midascraft.png'))),
 
             child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+              filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
               child: Container(
                 alignment: Alignment.bottomCenter,
                 child:
@@ -46,12 +47,12 @@ class _MidasDrawerState extends State<MidasDrawer> {
                         decorationStyle: TextDecorationStyle.double,
                         fontWeight: FontWeight.bold)),
                 decoration: const BoxDecoration(
-                    border: Border(bottom: BorderSide(color: Colors.red))),
+                    border: Border(bottom: BorderSide(color: MidasColors.darkRed))),
               ),),),
           ListTile(
             selected: DrawerSelection.novinky == _drawerSelection,
             selectedTileColor: Color(0xff330000),
-            title: const Text('Novinky'),
+            title: const Text('Novinky', style: TextStyle(color: Colors.white),),
             onTap: () {
               // Update the state of the app
               setState(() {
@@ -64,7 +65,7 @@ class _MidasDrawerState extends State<MidasDrawer> {
           ListTile(
             selected: DrawerSelection.hlasovanie == _drawerSelection,
             selectedTileColor: Color(0xff330000),
-            title: const Text('Hlasovanie'),
+            title: const Text('Hlasovanie', style: TextStyle(color: Colors.white)),
             onTap: () {
               // Update the state of the app
               setState(() {
@@ -77,7 +78,7 @@ class _MidasDrawerState extends State<MidasDrawer> {
           ListTile(
             selected: DrawerSelection.forum == _drawerSelection,
             selectedTileColor: Color(0xff330000),
-            title: const Text('Fórum'),
+            title: const Text('Fórum', style: TextStyle(color: Colors.white)),
             onTap: () {
               // Update the state of the app
               setState(() {
@@ -90,7 +91,7 @@ class _MidasDrawerState extends State<MidasDrawer> {
           ListTile(
             selected: DrawerSelection.nastavenia == _drawerSelection,
             selectedTileColor: Color(0xff330000),
-            title: const Text('Nastavenia'),
+            title: const Text('Nastavenia', style: TextStyle(color: Colors.white)),
             onTap: () {
               // Update the state of the app
               setState(() {

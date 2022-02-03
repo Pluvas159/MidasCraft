@@ -1,13 +1,17 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' as parser;
 import 'package:midascraft/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
+import 'notifications/notifications_api.dart';
 
 class Load extends StatefulWidget {
   const Load({Key? key}) : super(key: key);
@@ -26,11 +30,15 @@ class LoadState extends State<Load>{
   static late List<dom.Element> articles;
   static List<Image> articleImages = [];
   static var prefs;
+  static final notifications =  NotificationApi();
+  static List<dom.Element> newArticles = [];
+  static List<dom.Element> oldArticles = [];
 
   @override
   void initState() {
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
     _getDOM();
+    notifications.initialize();
     super.initState();
   }
 
@@ -65,17 +73,39 @@ class LoadState extends State<Load>{
     document = parser.parse(response.body);
     headerImage = Image.network(document.getElementsByTagName("img")[0].attributes['src'].toString());
     articles = document.getElementsByTagName("article");
-    for( dom.Element article in articles ) {
-      articleImages.add(Image.network(
-          article.children[0].children[0].attributes["src"].toString()));
-    }
+
     prefs = await SharedPreferences.getInstance();
+    getNextVotes();
 
     if (document!=null){
-      Navigator.of(context).pushReplacementNamed(MainScreen.route);
+    for( dom.Element article in articles ) {
+      String url = article.children[0].children[0].attributes["src"].toString();
+      if (url!="null"){
+        newArticles.add(article);
+        articleImages.add(Image.network(url));
+    } else {
+        url = article.children[0].children[0].children[0].attributes["src"].toString();
+        oldArticles.add(article);
+        articleImages.add(Image.network(url));
+      }
+    }
+    Navigator.of(context).pushReplacementNamed(MainScreen.route);
    }
     } else {
       throw NullThrownError();
+    }
+  }
+
+  static getNextVotes() async {
+    final czech_craft = "https://czech-craft.eu/api/server/midascraft/player/${prefs.getString("voteName")}/next_vote/";
+    final response = await http.get(Uri.parse(czech_craft));
+    if(response.statusCode == 200){final String next_vote = jsonDecode(response.body)['next_vote'];
+        notifications.send_timed_notification("Hlasovanie",
+            "Hlas pre czech-craft(${prefs.getString(
+                "voteName")}) je znova mozny", DateTime.parse(next_vote));
+
+    } else {
+      throw Exception("Can't fetch votes");
     }
   }
 }

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:midascraft/drawer.dart';
 import 'package:midascraft/util/WebRouteParams.dart';
-import 'package:midascraft/webview.dart';
+import 'package:midascraft/util/midas_colors.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 
 import 'htmlview.dart';
@@ -19,68 +20,132 @@ class MainScreen extends StatelessWidget {
         key: _key,
         body: CustomScrollView(
           slivers: <Widget>[
-            SliverAppBar(
-                title: const Text('MidasCraft'),
-                expandedHeight: 200.0,
-                pinned: true,
-                backgroundColor: Color(0xff330000),
-                leading: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Image.asset(
-                    "assets/midascraft.png",
-                  ),
-                ),
-                flexibleSpace: FlexibleSpaceBar(
-                  background: FittedBox(
-                    fit: BoxFit.fill,
-                    child: ClipRect(
-                      child: Container(
-                        child: Align(
-                          alignment: const Alignment(0.5, 0),
-                          heightFactor: 1,
-                          widthFactor: 0.5,
-                          child:
-                              LoadState.headerImage,
-                        ),
-                      ),
-                    ),
-                  ),
-                )),
-            SliverToBoxAdapter(
-              child: Column(children: [
-                Container(
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.fromLTRB(8, 8, 8, 0),
-                    child: Text("Novinky",
-                        textScaleFactor: 2,
-                        style: TextStyle(fontWeight: FontWeight.bold))),
-                Divider(
-                  color: Colors.red,
-                  thickness: 2,
-                )
-              ]),
-            ),
+            MidasSliverAppBar(),
+            MidasSliverText("Novinky", 2, Alignment.center),
+            SliverToBoxAdapter(child: newArticlesWidget()),
+            MidasSliverText("Staršie novinky", 1.5, Alignment.center),
             SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  return Container(
-                    alignment: Alignment.topLeft,
-                    margin: EdgeInsets.all(25.0),
-                    child: _homeRow(LoadState.getArticles()[index], context, index),
-                  );
-                },
-                childCount: 3,
-              ),
-            ),
+              delegate:
+                  SliverChildBuilderDelegate((BuildContext context, int index) {
+                return oldArticle(LoadState.oldArticles[index], index, context);
+              }, childCount: LoadState.oldArticles.length),
+            )
           ],
         ),
-        endDrawer: MidasDrawer() );
+        endDrawer: MidasDrawer());
   }
+}
+
+Widget MidasSliverText(String text, double height, Alignment textAlign) {
+  return SliverToBoxAdapter(
+    child: Column(children: [
+      Container(
+          alignment: textAlign,
+          margin: EdgeInsets.fromLTRB(8, 8, 8, 0),
+          child: Text(text,
+              textScaleFactor: height,
+              style: TextStyle(fontWeight: FontWeight.bold))),
+      Divider(
+        color: MidasColors.darkRed,
+        thickness: 2,
+      )
+    ]),
+  );
+}
+
+Widget MidasSliverAppBar() {
+  return SliverAppBar(
+      title: const Text('MidasCraft'),
+      expandedHeight: 200.0,
+      pinned: true,
+      backgroundColor: Color(0xff330000),
+      leading: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Image.asset(
+          "assets/midascraft.png",
+        ),
+      ),
+      flexibleSpace: FlexibleSpaceBar(
+        background: FittedBox(
+          fit: BoxFit.fill,
+          child: ClipRect(
+            child: Container(
+              child: Align(
+                alignment: const Alignment(0.5, 0),
+                heightFactor: 1,
+                widthFactor: 0.5,
+                child: LoadState.headerImage,
+              ),
+            ),
+          ),
+        ),
+      ));
+}
+
+Widget oldArticle(dom.Element article, int index, context) {
+  List<dom.Element> articles = LoadState.oldArticles;
+  String title = article.children[0].children[0].attributes["title"].toString();
+  return Column(children: [
+    Divider(),
+    InkWell(
+      child: Container(
+          margin: EdgeInsets.all(8),
+          child: Column(children: [
+            LoadState.articleImages[index + 3],
+            Divider(),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              margin: EdgeInsets.only(bottom: 5),
+              child: Text(
+                title,
+                textScaleFactor: 1.2,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            Container(
+                width: MediaQuery.of(context).size.width,
+                margin: EdgeInsets.only(bottom: 5),
+                child:
+                Text(
+                    article.getElementsByTagName("p")[0].text,
+                  textAlign: TextAlign.center,
+                )),
+          ])),
+      onTap: () => Navigator.of(context).pushNamed(HtmlView.route,
+          arguments: WebRouteParams(
+              title,
+              article
+                  .getElementsByTagName("a")[0]
+                  .attributes["href"]
+                  .toString(),
+              type: "article")),
+    ),
+    Divider(
+      color: Colors.red,
+    )
+  ]);
+}
+
+Widget newArticlesWidget() {
+  final PageController ctrl =
+      PageController(initialPage: 0, viewportFraction: .9);
+
+  return Container(
+      height: 285,
+      child: PageView.builder(
+        controller: ctrl,
+        itemCount: 3,
+        itemBuilder: (BuildContext context, int index) {
+          return _homeRow(LoadState.getArticles()[index], context, index);
+        },
+      ));
 }
 
 Widget _homeRow(dom.Element article, BuildContext context, int index) {
   return InkWell(
     child: Container(
+      margin: EdgeInsets.all(10),
       child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -103,10 +168,13 @@ Widget _homeRow(dom.Element article, BuildContext context, int index) {
           ]),
       decoration: BoxDecoration(
           color: Colors.white10,
-          border: Border(bottom: BorderSide(color: Colors.red))),
+          border: Border(bottom: BorderSide(color: MidasColors.darkRed))),
     ),
     onTap: () => Navigator.of(context).pushNamed(HtmlView.route,
-        arguments: WebRouteParams( article.children[0].attributes['title'].toString(),article.children[0].attributes["href"].toString(), type: "article")),
+        arguments: WebRouteParams(
+            article.children[0].attributes['title'].toString(),
+            article.children[0].attributes["href"].toString(),
+            type: "article")),
   );
 }
 
