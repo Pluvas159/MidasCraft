@@ -2,8 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
+import 'package:midascraft/main.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import '../hlasovanie.dart';
+import '../loading.dart';
 
 
 
@@ -16,6 +19,7 @@ class NotificationApi {
 
 
   void send_notification(String title, String body) async {
+    if(!LoadState.prefs.getBool("notificationState")) { return;}
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
     AndroidNotificationDetails('your channel id', 'your channel name',
         channelDescription: 'your channel description',
@@ -50,10 +54,11 @@ class NotificationApi {
   }
 
   void selectNotification(String? payload) async {
-    throw UnimplementedError();
+    Navigator.of(MidasCraft.materialKey.currentContext!).pushReplacementNamed(Hlasovanie.route);
   }
 
   void send_timed_notification(String title, String body, DateTime time) async {
+    if(!LoadState.prefs.getBool("notificationState")) { return;}
     try {
       await flutterLocalNotificationsPlugin.zonedSchedule(
           0, title, body, tz.TZDateTime.from(time, tz.local),

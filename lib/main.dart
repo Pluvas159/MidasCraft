@@ -13,17 +13,19 @@ import 'forum/forum.dart';
 import 'home.dart';
 
 void main() async {
-  runApp(const MyApp());
+  runApp(const MidasCraft());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MidasCraft extends StatelessWidget {
+  const MidasCraft({Key? key}) : super(key: key);
+  static final GlobalKey<NavigatorState> materialKey = GlobalKey<NavigatorState>();
 
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'MidasCraft',
+      navigatorKey: MidasCraft.materialKey,
       theme: ThemeData(
         primarySwatch: Colors.red,
         canvasColor: ColorScheme.dark().background,

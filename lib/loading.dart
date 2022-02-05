@@ -71,11 +71,37 @@ class LoadState extends State<Load>{
     final response = await http.get(Uri.parse('https://midascraft.sk/'));
     if(response.statusCode == 200){
     document = parser.parse(response.body);
-    headerImage = Image.network(document.getElementsByTagName("img")[0].attributes['src'].toString());
+    headerImage = Image.network(document.getElementsByTagName("img")[0].attributes['src'].toString(),
+        frameBuilder: (BuildContext context, Widget child, int? frame, bool wasSynchronouslyLoaded) {
+          if (wasSynchronouslyLoaded) {
+            return child;
+          }
+          return AnimatedOpacity(
+            opacity: frame == null ? 0 : 1,
+            duration: const Duration(seconds: 1),
+            curve: Curves.easeOut,
+            child: child,
+          );
+        },
+        loadingBuilder: (BuildContext context, Widget child,
+            ImageChunkEvent? loadingProgress) {
+          if (loadingProgress == null) {
+            return child;
+          }
+          return Center(
+            child: CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded /
+                  loadingProgress.expectedTotalBytes!
+                  : null,
+            ),
+          );
+        },
+      );
     articles = document.getElementsByTagName("article");
 
     prefs = await SharedPreferences.getInstance();
-    getNextVotes();
+    await getNextVotes();
 
     if (document!=null){
     for( dom.Element article in articles ) {
@@ -89,7 +115,7 @@ class LoadState extends State<Load>{
         articleImages.add(Image.network(url));
       }
     }
-    Navigator.of(context).pushReplacementNamed(MainScreen.route);
+    if (articleImages.length==8) {Navigator.of(context).pushReplacementNamed(MainScreen.route);}
    }
     } else {
       throw NullThrownError();
