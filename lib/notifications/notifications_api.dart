@@ -5,8 +5,8 @@ import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:midascraft/main.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-import '../hlasovanie.dart';
-import '../loading.dart';
+import '../widgets/hlasovanie/hlasovanie.dart';
+import '../widgets/loading/loading.dart';
 
 
 

@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import 'loading.dart';
+import '../widgets/loading/loading.dart';
 
 class MidasWebView extends StatefulWidget {
   const MidasWebView({Key? key}) : super(key: key);

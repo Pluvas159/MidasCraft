@@ -1,20 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:midascraft/drawer.dart';
 import 'package:midascraft/util/midas_colors.dart';
 
-import 'loading.dart';
+import '../loading/loading.dart';
 
-class Settings extends StatefulWidget {
+class Nastavenia extends StatefulWidget {
   static final String route = "/nastavenia";
 
   static String voteUsername = "";
 
   @override
-  State<Settings> createState() => _SettingsState();
+  State<Nastavenia> createState() => _NastaveniaState();
 }
 
-class _SettingsState extends State<Settings> {
+class _NastaveniaState extends State<Nastavenia> {
   final nameController =
       TextEditingController(text: LoadState.prefs.getString('voteName') ?? "");
   bool nameSave = false;
@@ -29,7 +28,7 @@ class _SettingsState extends State<Settings> {
   }
 
   Widget notificationSwitch() {
-    return SwitchOption("Notifikácie hlasovania", Switch(value: notificationState, onChanged:(state) {
+    return SwitchOption("Notifikácie hlasovania", Switch(activeColor: MidasColors.red, value: notificationState, onChanged:(state) {
       setState(() {
         LoadState.prefs.setBool("notificationState", state);
         notificationState = state;
@@ -131,7 +130,6 @@ class _SettingsState extends State<Settings> {
           notificationSwitch()
         ],
       ),
-      endDrawer: MidasDrawer(),
     );
   }
 }

@@ -1,28 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:html/dom.dart' as dom;
-import 'package:midascraft/drawer.dart';
 import 'package:midascraft/util/WebRouteParams.dart';
 import 'package:midascraft/util/midas_colors.dart';
 import 'package:midascraft/util/yt_player.dart';
 
 import 'package:url_launcher/url_launcher.dart';
-import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
-import 'htmlview.dart';
-import 'loading.dart';
-
+import '../../util/htmlview.dart';
+import '../loading/loading.dart';
 
 /// This is the stateless widget that the main application instantiates.
-class MainScreen extends StatelessWidget {
+class Novinky extends StatelessWidget {
   final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
   static const String route = "/novinky";
   String yt_link = LoadState.document
       .getElementsByClassName("wp-video")[0]
       .getElementsByTagName("a")[0]
       .attributes["href"]!;
-
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +29,10 @@ class MainScreen extends StatelessWidget {
             SliverToBoxAdapter(child: newArticlesWidget()),
             MidasSliverText("Najnovšie video", 1.5, Alignment.center),
             SliverToBoxAdapter(
-              child:
-              Container(
-                margin: EdgeInsets.all(8),
-                child: YtPlayer(
-                     url: yt_link.substring(yt_link.indexOf("be/") + 3))),
+              child: Container(
+                  margin: EdgeInsets.all(8),
+                  child: YtPlayer(
+                      url: yt_link.substring(yt_link.indexOf("be/") + 3))),
             ),
             MidasSliverText("Staršie novinky", 1.5, Alignment.center),
             SliverList(
@@ -50,7 +43,7 @@ class MainScreen extends StatelessWidget {
             )
           ],
         ),
-        endDrawer: MidasDrawer());
+    );
   }
 }
 
@@ -74,7 +67,6 @@ Widget MidasSliverText(String text, double height, Alignment textAlign) {
 Widget MidasSliverAppBar() {
   return SliverAppBar(
       title: const Text('MidasCraft'),
-      expandedHeight: 200.0,
       pinned: true,
       backgroundColor: Color(0xff330000),
       leading: Padding(
@@ -83,21 +75,7 @@ Widget MidasSliverAppBar() {
           "assets/midascraft.png",
         ),
       ),
-      flexibleSpace: FlexibleSpaceBar(
-        background: FittedBox(
-          fit: BoxFit.fill,
-          child: ClipRect(
-            child: Container(
-              child: Align(
-                alignment: const Alignment(0.5, 0),
-                heightFactor: 1,
-                widthFactor: 0.5,
-                child: LoadState.headerImage,
-              ),
-            ),
-          ),
-        ),
-      ));
+      );
 }
 
 Widget oldArticle(dom.Element article, int index, context) {

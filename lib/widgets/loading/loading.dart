@@ -7,11 +7,11 @@ import 'package:http/http.dart' as http;
 
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' as parser;
-import 'package:midascraft/home.dart';
+import 'package:midascraft/navigation/midas_navigator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import 'notifications/notifications_api.dart';
+import '../../notifications/notifications_api.dart';
 
 class Load extends StatefulWidget {
   const Load({Key? key}) : super(key: key);
@@ -72,31 +72,6 @@ class LoadState extends State<Load>{
     if(response.statusCode == 200){
     document = parser.parse(response.body);
     headerImage = Image.network(document.getElementsByTagName("img")[0].attributes['src'].toString(),
-        frameBuilder: (BuildContext context, Widget child, int? frame, bool wasSynchronouslyLoaded) {
-          if (wasSynchronouslyLoaded) {
-            return child;
-          }
-          return AnimatedOpacity(
-            opacity: frame == null ? 0 : 1,
-            duration: const Duration(seconds: 1),
-            curve: Curves.easeOut,
-            child: child,
-          );
-        },
-        loadingBuilder: (BuildContext context, Widget child,
-            ImageChunkEvent? loadingProgress) {
-          if (loadingProgress == null) {
-            return child;
-          }
-          return Center(
-            child: CircularProgressIndicator(
-              value: loadingProgress.expectedTotalBytes != null
-                  ? loadingProgress.cumulativeBytesLoaded /
-                  loadingProgress.expectedTotalBytes!
-                  : null,
-            ),
-          );
-        },
       );
     articles = document.getElementsByTagName("article");
 
@@ -108,14 +83,66 @@ class LoadState extends State<Load>{
       String url = article.children[0].children[0].attributes["src"].toString();
       if (url!="null"){
         newArticles.add(article);
-        articleImages.add(Image.network(url));
+        articleImages.add(Image.network(url,  frameBuilder: (BuildContext context, Widget child, int? frame, bool wasSynchronouslyLoaded) {
+          if (wasSynchronouslyLoaded) {
+            return child;
+          }
+          return AnimatedOpacity(
+            opacity: frame == null ? 0 : 1,
+            duration: const Duration(seconds: 1),
+            curve: Curves.easeOut,
+            child: child,
+          );
+        },
+          loadingBuilder: (BuildContext context, Widget child,
+              ImageChunkEvent? loadingProgress) {
+            if (loadingProgress == null) {
+              return child;
+            }
+            return Center(child: Container(
+              margin: EdgeInsets.all(50),
+                child:
+              CircularProgressIndicator(
+                color: Colors.white,
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded /
+                    loadingProgress.expectedTotalBytes!
+                    : null,
+              )));
+          },));
     } else {
         url = article.children[0].children[0].children[0].attributes["src"].toString();
         oldArticles.add(article);
-        articleImages.add(Image.network(url));
+        articleImages.add(Image.network(url, frameBuilder: (BuildContext context, Widget child, int? frame, bool wasSynchronouslyLoaded) {
+          if (wasSynchronouslyLoaded) {
+            return child;
+          }
+          return AnimatedOpacity(
+            opacity: frame == null ? 0 : 1,
+            duration: const Duration(seconds: 1),
+            curve: Curves.easeOut,
+            child: child,
+          );
+        },
+            loadingBuilder: (BuildContext context, Widget child,
+                ImageChunkEvent? loadingProgress) {
+              if (loadingProgress == null) {
+                return child;
+              }
+              return Center(child: Container(
+                  margin: EdgeInsets.all(50),
+                  child:
+                  CircularProgressIndicator(
+                    color: Colors.white,
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
+                        : null,
+                  )));
+            }));
       }
     }
-    if (articleImages.length==8) {Navigator.of(context).pushReplacementNamed(MainScreen.route);}
+    if (articleImages.length==8) {Navigator.of(context).pushReplacementNamed(MidasNavigator.route);}
    }
     } else {
       throw NullThrownError();

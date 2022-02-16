@@ -1,9 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:midascraft/hlasovanie.dart';
-import 'package:midascraft/home.dart';
-import 'package:midascraft/settings.dart';
+import 'package:midascraft/navigation/midas_navigator.dart';
+import 'package:midascraft/widgets/hlasovanie/hlasovanie.dart';
+import 'package:midascraft/widgets/nastavenia/nastavenia.dart';
 import 'package:midascraft/util/WebRouteParams.dart';
 import 'package:midascraft/util/midas_colors.dart';
 
@@ -59,7 +59,7 @@ class _MidasDrawerState extends State<MidasDrawer> {
                 _drawerSelection = DrawerSelection.novinky;
               });
               // Then close the drawer
-              Navigator.of(context).pushReplacementNamed(MainScreen.route);
+              Navigator.of(context).pushReplacementNamed(MidasNavigator.route);
             },
           ),
           ListTile(

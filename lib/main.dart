@@ -1,16 +1,14 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:midascraft/hlasovanie.dart';
-import 'package:midascraft/htmlview.dart';
-import 'package:midascraft/loading.dart';
-import 'package:midascraft/notifications/notifications_api.dart';
-import 'package:midascraft/settings.dart';
-import 'package:midascraft/util/WebRouteParams.dart';
-import 'package:midascraft/webview.dart';
+import 'package:midascraft/widgets/hlasovanie/hlasovanie.dart';
+import 'package:midascraft/util/htmlview.dart';
+import 'package:midascraft/widgets/loading/loading.dart';
+import 'package:midascraft/navigation/midas_navigator.dart';
+import 'package:midascraft/util/webview.dart';
+import 'package:midascraft/widgets/nastavenia/nastavenia.dart';
 
-import 'forum/forum.dart';
-import 'home.dart';
+
 
 void main() async {
   runApp(const MidasCraft());
@@ -36,12 +34,12 @@ class MidasCraft extends StatelessWidget {
       initialRoute: Load.route,
       routes: <String, WidgetBuilder> {
         Load.route : (BuildContext context) => const Load(),
-        MainScreen.route : (BuildContext context) => MainScreen(),
+        MidasNavigator.route : (BuildContext context) => MidasNavigator(),
         Hlasovanie.route : (BuildContext context) => Hlasovanie(),
         MidasWebView.route : (BuildContext context) => MidasWebView(),
-        Settings.route : (BuildContext context) => Settings(),
+        Nastavenia.route : (BuildContext context) => Nastavenia(),
         HtmlView.route : (BuildContext context) => HtmlView(),
-        Forum.route: (BuildContext context ) => Forum()
+        //Forum.route: (BuildContext context ) => Forum()
       }
     );
   }
